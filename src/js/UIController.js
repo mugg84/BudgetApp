@@ -13,7 +13,7 @@ export const UIController = (() => {
       return {
         type: document.querySelector(DOMstrings.inputType).value, // 'inc' or 'exp'
         description: document.querySelector(DOMstrings.inputDescription).value,
-        value: document.querySelector(DOMstrings.inputValue).value,
+        value: parseFloat(document.querySelector(DOMstrings.inputValue).value),
       };
     },
     addListItem(obj, type) {
@@ -60,12 +60,13 @@ export const UIController = (() => {
         DOMstrings.inputDescription + ", " + DOMstrings.inputValue
       );
 
-      fieldsArr = Array.prototype.slice.call(fields);
-      console.log(fieldsArr);
+      fieldsArr = [...fields];
 
       fieldsArr.forEach((current) => {
         current.value = "";
       });
+
+      fieldsArr[0].focus();
     },
     getDOMstrings() {
       return DOMstrings;

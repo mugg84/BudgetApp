@@ -14,21 +14,30 @@ const controller = ((budgetCtrl, UICtrl) => {
     });
   };
 
+  const updateBudget = () => {
+    // Calculate budget
+    // Return budget
+    // Display budget
+  };
+
   const ctrlAddItem = () => {
     let input, newItem;
     // Get input data
     input = UICtrl.getInput();
 
-    // Add item to budgetcontroller
-    newItem = budgetCtrl.addItem(input.type, input.description, input.value);
+    if (input.description !== "" && !isNaN(input.value) && input.value > 0) {
+      // Add item to budgetcontroller
+      newItem = budgetCtrl.addItem(input.type, input.description, input.value);
 
-    // Add item to UI
-    UICtrl.addListItem(newItem, input.type);
+      // Add item to UI
+      UICtrl.addListItem(newItem, input.type);
 
-    // Clear fields
-    UICtrl.clearFields();
-    // Calculate budget
-    // Display budget
+      // Clear fields
+      UICtrl.clearFields();
+
+      //Calculate and update budget
+      updateBudget();
+    }
   };
 
   return {
