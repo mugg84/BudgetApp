@@ -16,8 +16,13 @@ const controller = ((budgetCtrl, UICtrl) => {
 
   const updateBudget = () => {
     // Calculate budget
+    budgetCtrl.calculateBudget();
+
     // Return budget
+    const budget = budgetCtrl.getbudget();
+
     // Display budget
+    UICtrl.displayBudget(budget);
   };
 
   const ctrlAddItem = () => {
@@ -42,6 +47,12 @@ const controller = ((budgetCtrl, UICtrl) => {
 
   return {
     init() {
+      UICtrl.displayBudget({
+        budget: 0,
+        totalInc: 0,
+        totalExp: 0,
+        percentage: 0,
+      });
       setupEventListener();
     },
   };
