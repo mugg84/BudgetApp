@@ -12,6 +12,10 @@ const controller = ((budgetCtrl, UICtrl) => {
         ctrlAddItem();
       }
     });
+
+    document
+      .querySelector(DOM.container)
+      .addEventListener("click", ctrlDeleteItem);
   };
 
   const updateBudget = () => {
@@ -23,6 +27,15 @@ const controller = ((budgetCtrl, UICtrl) => {
 
     // Display budget
     UICtrl.displayBudget(budget);
+  };
+
+  const updatePercentages = () => {
+    //Calculate percentages
+    budgetCtrl.calculatePercentages();
+    //Read percentages from budget controller
+    let percentages = budgetCtrl.getPercentages();
+    //Update UI with the new percentages
+    UICtrl.displayPercentages(percentages);
   };
 
   const ctrlAddItem = () => {
@@ -42,6 +55,33 @@ const controller = ((budgetCtrl, UICtrl) => {
 
       //Calculate and update budget
       updateBudget();
+
+      //Calculate and update percentages
+      updatePercentages();
+    }
+  };
+
+  const ctrlDeleteItem = (event) => {
+    let itemID, splitID, type, ID;
+
+    itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
+
+    if (itemID) {
+      splitID = itemID.split("-");
+      type = splitID[0];
+      ID = parseInt(splitID[1]);
+
+      //delete item from data structure
+      budgetCtrl.deleteItem(type, ID);
+
+      // delete item from the UI
+      UICtrl.deleteListItem(itemID);
+
+      // update and show new budget
+      updateBudget();
+
+      // calculate and update percentages
+      updatePercentages();
     }
   };
 

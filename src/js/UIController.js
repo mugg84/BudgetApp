@@ -10,6 +10,32 @@ export const UIController = (() => {
     incomeLabel: ".budget__income--value",
     expensesLabel: ".budget__expenses--value",
     percentageLabel: ".budget__expenses--percentage",
+    container: ".container",
+    expensesPercLabel: ".item__percentage",
+  };
+
+  const formatNumber = (num, type) => {
+    let numSplit, int, dec;
+
+    num = Math.abs(num);
+
+    num = num.toFixed(2);
+
+    numSplit = num.split(".");
+    int = numSplit[0];
+
+    if (int.length > 3) {
+      int =
+        int.slice(0, int.length - 3) +
+        "," +
+        int.slice(int.length - 3, int.length);
+    }
+
+    dec = numSplit[1];
+
+    type === "exp" ? "-" : "+";
+
+    return `${type === "exp" ? "-" : "+"} ${int}.${dec}`;
   };
 
   return {
@@ -27,10 +53,13 @@ export const UIController = (() => {
 
       if (type === "inc") {
         element = DOMstrings.incomeContainer;
-        html = `<div class="item clearfix" id="income-${obj.id}">
+        html = `<div class="item clearfix" id="inc-${obj.id}">
                       <div class="item__description">${obj.description}</div>
                         <div class="right clearfix">
-                          <div class="item__value">${obj.value}</div>
+                          <div class="item__value">${formatNumber(
+                            obj.value,
+                            type
+                          )}</div>
                           <div class="item__delete">
                             <button class="item__delete--btn">
                               <i class="ion-ios-close-outline"></i>
@@ -40,11 +69,13 @@ export const UIController = (() => {
                       </div>`;
       } else if (type === "exp") {
         element = DOMstrings.expenseContainer;
-        html = `<div class="item clearfix" id="expense-${obj.id}">
+        html = `<div class="item clearfix" id="exp-${obj.id}">
                        <div class="item__description">${obj.description}</div>
-                            <div class="right clearfix">
-                                <div class="item__value">                          
-                                  <div class="item__value">${obj.value}</div>
+                          <div class="right clearfix">                        
+                                  <div class="item__value">${formatNumber(
+                                    obj.value,
+                                    type
+                                  )}</div>
                                 <div class="item__percentage">21%</div>
                                 <div class="item__delete">
                                     <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>
@@ -56,6 +87,11 @@ export const UIController = (() => {
       //insert HTML to the DOM
 
       document.querySelector(element).insertAdjacentHTML("beforeend", html);
+    },
+    deleteListItem(selectorID) {
+      let el = document.getElementById(selectorID);
+
+      el.parentNode.removeChild(el);
     },
     clearFields() {
       let fields, fieldsArr;
@@ -73,12 +109,23 @@ export const UIController = (() => {
       fieldsArr[0].focus();
     },
     displayBudget(obj) {
-      document.querySelector(DOMstrings.budgetLabel).textContent = obj.budget;
+      let type;
 
-      document.querySelector(DOMstrings.incomeLabel).textContent = obj.totalInc;
+      obj.budget > 0 ? (type = "inc") : (type = "exp");
 
-      document.querySelector(DOMstrings.expensesLabel).textContent =
-        obj.totalExp;
+      document.querySelector(DOMstrings.budgetLabel).textContent = formatNumber(
+        obj.budget,
+        type
+      );
+
+      document.querySelector(DOMstrings.incomeLabel).textContent = formatNumber(
+        obj.totalInc,
+        type
+      );
+
+      document.querySelector(
+        DOMstrings.expensesLabel
+      ).textContent = formatNumber(obj.totalExp, type);
 
       if (obj.percentage > 0) {
         document.querySelector(
@@ -87,6 +134,21 @@ export const UIController = (() => {
       } else {
         document.querySelector(DOMstrings.percentageLabel).textContent = "---";
       }
+    },
+    displayPercentages(percentages) {
+      let fields, fieldsArr;
+
+      fields = document.querySelectorAll(DOMstrings.expensesPercLabel);
+
+      fieldsArr = [...fields];
+
+      fieldsArr.forEach((cur, i) => {
+        if (percentages[i] > 0) {
+          cur.textContent = percentages[i] + "%";
+        } else {
+          cur.textContent = "---";
+        }
+      });
     },
     getDOMstrings() {
       return DOMstrings;

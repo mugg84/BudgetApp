@@ -4,6 +4,19 @@ export const budgetController = (() => {
       this.id = id;
       this.description = description;
       this.value = value;
+      this.percentage = -1;
+    }
+
+    calcPercentages(totalIncome) {
+      if (totalIncome > 0) {
+        this.percentage = Math.round((this.value / totalIncome) * 100);
+      } else {
+        this.percentage = -1;
+      }
+    }
+
+    getPercentage() {
+      return this.percentage;
     }
   }
 
@@ -60,6 +73,19 @@ export const budgetController = (() => {
       //return new element
       return newItem;
     },
+    deleteItem(type, id) {
+      let ids, index;
+
+      ids = data.allItems[type].map((current) => {
+        return current.id;
+      });
+
+      index = ids.indexOf(id);
+
+      if (index !== -1) {
+        data.allItems[type].splice(index, 1);
+      }
+    },
     calculateBudget() {
       //calculate total income and expenses
       calculateTotal("exp");
@@ -74,6 +100,17 @@ export const budgetController = (() => {
       } else {
         data.percentage = -1;
       }
+    },
+    calculatePercentages() {
+      data.allItems.exp.forEach((cur) => {
+        cur.calcPercentages(data.totals.inc);
+      });
+    },
+    getPercentages() {
+      const allPerc = data.allItems.exp.map((cur) => {
+        return cur.getPercentage();
+      });
+      return allPerc;
     },
     getbudget() {
       return {
