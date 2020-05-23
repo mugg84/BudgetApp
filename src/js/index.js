@@ -16,6 +16,10 @@ const controller = ((budgetCtrl, UICtrl) => {
     document
       .querySelector(DOM.container)
       .addEventListener("click", ctrlDeleteItem);
+
+    document
+      .querySelector(DOM.inputType)
+      .addEventListener("change", UICtrl.changeType);
   };
 
   const updateBudget = () => {
@@ -94,6 +98,7 @@ const controller = ((budgetCtrl, UICtrl) => {
         percentage: 0,
       });
       setupEventListener();
+      UICtrl.displayMonth();
     },
   };
 })(budgetController, UIController);

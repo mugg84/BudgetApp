@@ -12,6 +12,7 @@ export const UIController = (() => {
     percentageLabel: ".budget__expenses--percentage",
     container: ".container",
     expensesPercLabel: ".item__percentage",
+    dateLabel: ".budget__title--month",
   };
 
   const formatNumber = (num, type) => {
@@ -149,6 +150,45 @@ export const UIController = (() => {
           cur.textContent = "---";
         }
       });
+    },
+    displayMonth() {
+      let now, year, month, months;
+
+      now = new Date();
+
+      months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      month = now.getMonth();
+
+      year = now.getFullYear();
+      document.querySelector(
+        DOMstrings.dateLabel
+      ).textContent = `${months[month]} ${year}`;
+    },
+    changeType() {
+      let field, fields;
+
+      field = document.querySelectorAll(
+        `${DOMstrings.inputType},${DOMstrings.inputDescription},${DOMstrings.inputValue}`
+      );
+
+      fields = [...field];
+
+      fields.forEach((cur) => cur.classList.toggle("red-focus"));
+
+      document.querySelector(DOMstrings.inputBtn).classList.toggle("red");
     },
     getDOMstrings() {
       return DOMstrings;
